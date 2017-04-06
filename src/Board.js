@@ -114,31 +114,20 @@
     // --------------------------------------------------------------
     //
     // test if a specific column on this board contains a conflict
-    hasColConflictAt: function(colIndex) {     
-      let rows = this.get(colIndex);
+    hasColConflictAt: function(colIndex) {
       let cols = [];
       let counter = 0;
       let board = this.rows();
 
 
       for (let i = 0; i < board.length; i++) {
-        /*
-          iterate over each row 
-            for each index 
-              if the value at the current index equals 1
-                set cols to cols at the current index + 1 
-                if the value at cols at the current index is greater than 1
-                  return true 
-        */
-        for (let j = 0; j < board[i].length; j++) {
-          if (board[i][j]) {
-            if (!cols[j]) {
-              cols[j] = 1;
-            } else {
-              return true;
-            }
-          } 
-        }
+        if (board[i][colIndex]) {
+          if (!cols[colIndex]) {
+            cols[colIndex] = 1;
+          } else {
+            return true;
+          }
+        } 
       }
 
       return false;
@@ -164,32 +153,51 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
+      // initialize variables board to rows call, 
       let board = this.rows();
-      let colIndex = 0;
-      let counter = 0;
-      let startingIndex = majorDiagonalColumnIndexAtFirstRow;
+      //colIndex to input, 
+      let colIndex = majorDiagonalColumnIndexAtFirstRow;
+      //rowIndex to zero and 
+      let rowIndex = 0;
+      //queenSeen to false
+      let queenSeen = false;
 
-      for (startingIndex; startingIndex < board.length; startingIndex++) {
-        if (board[colIndex][startingIndex]) {
-          colIndex += 1;
-          counter += 1;
-          if (counter > 1) {
+      // while we are still in b0unds
+      while (this._isInBounds(rowIndex, colIndex)) {
+        // if there is a queen at the current index
+        if (board[rowIndex][colIndex]) {
+          //if the queen has been seen,
+          if (queenSeen) {
+            //return true;
             return true;
+          //otherwise
+          } else {
+            //set queenSeen to true
+            queenSeen = true;
           }
         }
+        //increment the column
+        colIndex++;
+        //increment the row index
+        rowIndex++;
       }
-     
+
       return false;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
       let board = this.rows();
-      let colIndex = 0;
+      // let colIndex = 0;
+      // let rowIndex = 0;
 
-      for (colIndex; colIndex < board.length; colIndex++) {
-        if (this.hasMajorDiagonalConflictAt(colIndex)) {
-          return true;
+      // check if board has any major diagonal conflicts from row 0
+      // debugger;
+      for (let i = board.length - 1; i >= 0; i--) {
+        for (let j = 0; j < board.length; j++) {
+          if (this.hasMajorDiagonalConflictAt(i)) {
+            return true;
+          }
         }
       }
 
