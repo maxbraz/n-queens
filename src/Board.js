@@ -105,6 +105,7 @@
         }
       }
 
+      // console.log('attributes ', this.attributes)
       return false;
     },
 
@@ -115,16 +116,45 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      let cols = this.get(colIndex);
+      // let board = this.attributes;
+      let rows = this.get(colIndex);
+      let cols = [];
       let counter = 0;
-      console.log('Coloumn index *** ', cols)
 
-      return false; // fixme
+      for (let i = 0; i < this.attributes.length; i++) {
+        /*
+          iterate over each row 
+            for each index 
+              if the value at the current index equals 1
+                set cols to cols at the current index + 1 
+                if the value at cols at the current index is greater than 1
+                  return true 
+        */
+        for (let j = 0; j < this.attributes[i].length; j++) {
+          if (this.attributes[i][j]) {
+            if (!cols[j]) {
+              cols[j] = 1;
+            } else {
+              return true;
+            }
+          } 
+        }
+      }
+
+      return false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      let size = this.get('n');
+
+      for (let i = 0; i < size; i++) {
+        if (this.hasColConflictAt(i)) {
+          return true;
+        }
+      }
+
+      return false; 
     },
 
 
