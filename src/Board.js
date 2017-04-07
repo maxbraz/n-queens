@@ -91,7 +91,6 @@
           }
         }
       }
-
       return false;
     },
 
@@ -104,7 +103,6 @@
           return true;
         }
       }
-
       return false;
     },
 
@@ -119,7 +117,6 @@
       let counter = 0;
       let board = this.rows();
 
-
       for (let i = 0; i < board.length; i++) {
         if (board[i][colIndex]) {
           if (!cols[colIndex]) {
@@ -129,7 +126,6 @@
           }
         } 
       }
-
       return false;
     },
 
@@ -146,62 +142,44 @@
       return false; 
     },
 
-
-
     // Major Diagonals - go from top-left to bottom-right
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      // initialize variables board to rows call, 
-      let board = this.rows();
-      //colIndex to input, 
-      let colIndex = majorDiagonalColumnIndexAtFirstRow;
-      //rowIndex to zero and 
+      /*
+        initalize variables board size, a counter set to zero, rowIndex set to zero, and a colIndex set to the input argument 
+
+        for each element in the row, as long as the rowIndex and colIndex are both less than the board size, increment them
+          if the colIndex is greater than or equal to zero 
+            initialize a var row and get the entire row at the row index 
+            increment the counter by the number found at the current colIndex in the row
+        return the result of counter greater than one 
+      */
+      let size = this.get('n');
+      let counter = 0;
       let rowIndex = 0;
-      //queenSeen to false
-      let queenSeen = false;
+      let colIndex = majorDiagonalColumnIndexAtFirstRow;
 
-      // while we are still in b0unds
-      while (this._isInBounds(rowIndex, colIndex)) {
-        // if there is a queen at the current index
-        if (board[rowIndex][colIndex]) {
-          //if the queen has been seen,
-          if (queenSeen) {
-            //return true;
-            return true;
-          //otherwise
-          } else {
-            //set queenSeen to true
-            queenSeen = true;
-          }
+      for ( ; rowIndex < size && colIndex < size; rowIndex++, colIndex++) {
+        if (colIndex >= 0) {
+          var row = this.get(rowIndex);
+          counter += row[colIndex];
         }
-        //increment the column
-        colIndex++;
-        //increment the row index
-        rowIndex++;
       }
-
-      return false;
+      return counter > 1;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      let board = this.rows();
-      // let colIndex = 0;
-      // let rowIndex = 0;
+      let size = this.get('n');
 
-      // check if board has any major diagonal conflicts from row 0
-      // debugger;
-      for (let i = board.length - 1; i >= 0; i--) {
-        for (let j = 0; j < board.length; j++) {
-          if (this.hasMajorDiagonalConflictAt(i)) {
-            return true;
-          }
+      for (let i = 1 - size; i < size; i++) {
+        if (this.hasMajorDiagonalConflictAt(i)) {
+          return true;
         }
       }
-
-      return false; 
+      return false;
     },
 
     // _getFirstRowColumnIndexForMajorDiagonalOn(rowIndex, colIndex)
@@ -212,12 +190,30 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      let size = this.get('n');
+      let counter = 0;
+      let rowIndex = 0;
+      let colIndex = minorDiagonalColumnIndexAtFirstRow;
+
+      for (; rowIndex < size && colIndex >= 0; rowIndex++, colIndex--) {
+        if (colIndex < size) {
+          var row = this.get(rowIndex);
+          counter += row[colIndex];
+        }
+      }
+      return counter > 1;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      let size = this.get('n');
+
+      for (let i = size + size - 1; i >= 0; i--) {
+        if (this.hasMinorDiagonalConflictAt(i)) {
+          return true;
+        }
+      }
+      return false; 
     }
 
     // _getFirstRowColumnIndexForMinorDiagonalOn: function(rowIndex, colIndex)
